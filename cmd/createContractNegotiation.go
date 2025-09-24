@@ -19,38 +19,45 @@ var createContractNegotiationCmd = &cobra.Command{
 	Short: "Command that creates contact negotiation with HTTP call",
 	Long:  `Creates contract negotiation by requesting catalog first and embedding the offer id into contract initiation http call`,
 	Run: func(cmd *cobra.Command, args []string) {
-		url := "http://dataconsumer-1-controlplane.tx.test/management/v3/catalog/request"
-		catologRequest := `{
-			"@context": {
-			"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
-			},
-			"@type": "CatalogRequest",
-			"counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp",
-			"counterPartyId": "BPNL00000003AYRE",
-			"protocol": "dataspace-protocol-http",
-			"querySpec": {
-			"filterExpression": {
-				"operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-				"operator": "=",
-				"operandRight": "200"
-			},
-			"offset": 0,
-			"limit": 50
-			}
-		}`
-		responseBody := utils.SendPostRequest([]byte(catologRequest), url)
+		idOfAsset, _ := cmd.Flags().GetString("assetId")
+		if idOfAsset != "" {
+			url := "http://dataconsumer-1-controlplane.tx.test/management/v3/catalog/request"
+			catalogRequest := `{
+				"@context": {
+				"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+				},
+				"@type": "CatalogRequest",
+				"counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp",
+				"counterPartyId": "BPNL00000003AYRE",
+				"protocol": "dataspace-protocol-http",
+				"querySpec": {
+				"filterExpression": {
+					"operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
+					"operator": "=",
+					"operandRight": "%s"
+				},
+				"offset": 0,
+				"limit": 50
+				}
+			}`
+			catalogRequest = fmt.Sprintf(catalogRequest, idOfAsset)
+			responseBody := utils.SendPostRequest([]byte(catalogRequest), url)
 
-		fmt.Println("createContractNegotiation called")
-		catalogResponse := utils.CatalogRequestResponse{}
-		var plainJson interface{}
-		json.Unmarshal([]byte(responseBody), &plainJson)
-		m := plainJson.(map[string]interface{})
-		dataset, _ := json.Marshal(m["dcat:dataset"])
+			fmt.Println("createContractNegotiation called")
+			catalogResponse := utils.CatalogRequestResponse{}
+			var plainJson interface{}
+			json.Unmarshal([]byte(responseBody), &plainJson)
+			m := plainJson.(map[string]interface{})
+			dataset, _ := json.Marshal(m["dcat:dataset"])
 
-		json.Unmarshal(dataset, &catalogResponse)
+			json.Unmarshal(dataset, &catalogResponse)
 
-		out := RunCurl(catalogResponse.ID, catalogResponse.OdrlHasPolicy.ID)
-		fmt.Println(out)
+			out := RunCurl(catalogResponse.ID, catalogResponse.OdrlHasPolicy.ID)
+			fmt.Println(out)
+		} else {
+			panic("assetId is required")
+		}
+
 	},
 }
 
