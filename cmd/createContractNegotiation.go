@@ -63,7 +63,7 @@ var createContractNegotiationCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(createContractNegotiationCmd)
-	createContractDefinitionCmd.Flags().String("assetId", "", "asset ID that's being part of contract negotiation")
+	createContractNegotiationCmd.Flags().String("assetId", "", "asset ID that's being part of contract negotiation")
 }
 
 func RunCurl(assetId string, offerId string) string {
