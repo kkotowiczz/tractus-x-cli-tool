@@ -7,10 +7,10 @@ import (
 	"net/http"
 )
 
-func SendPostRequest(body []byte, url string) string {
+func SendPostRequest(body []byte, url string, apiKey string) string {
 	r, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer([]byte(body)))
 	r.Header.Add("Content-Type", "application/json")
-	r.Header.Add("X-API-KEY", "TEST2")
+	r.Header.Add("X-API-KEY", apiKey)
 	if err != nil {
 		panic(err)
 	}

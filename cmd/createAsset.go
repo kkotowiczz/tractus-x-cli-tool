@@ -55,6 +55,6 @@ func CreateAsset(assetId string) {
     }
   }`
 	createAssetDto = fmt.Sprintf(createAssetDto, assetId)
-	d := utils.SendPostRequest([]byte(createAssetDto), assetsUrl)
+	d := utils.SendPostRequest([]byte(createAssetDto), assetsUrl, "TEST2")
 	fmt.Println(d)
 }

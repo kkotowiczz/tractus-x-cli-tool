@@ -55,5 +55,5 @@ func CreateContractDefinition(contractId string, accessPolicyId string, contract
 
 	createContractDto = fmt.Sprintf(createContractDto, contractId, accessPolicyId, contractPolicyId, criterionId)
 
-	utils.SendPostRequest([]byte(createContractDto), createContractUrl)
+	utils.SendPostRequest([]byte(createContractDto), createContractUrl, "TEST2")
 }

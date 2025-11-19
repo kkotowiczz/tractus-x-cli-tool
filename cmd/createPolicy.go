@@ -55,5 +55,5 @@ func CreatePolicy(policyId string) {
 }`
 	createPolicyDto = fmt.Sprintf(createPolicyDto, policyId)
 
-	utils.SendPostRequest([]byte(createPolicyDto), policyDefinitionUrl)
+	utils.SendPostRequest([]byte(createPolicyDto), policyDefinitionUrl, "TEST2")
 }

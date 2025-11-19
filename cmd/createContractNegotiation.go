@@ -41,13 +41,14 @@ var createContractNegotiationCmd = &cobra.Command{
 				}
 			}`
 			catalogRequest = fmt.Sprintf(catalogRequest, idOfAsset)
-			responseBody := utils.SendPostRequest([]byte(catalogRequest), url)
+			responseBody := utils.SendPostRequest([]byte(catalogRequest), url, "TEST1")
 
 			fmt.Println("createContractNegotiation called")
 			catalogResponse := utils.CatalogRequestResponse{}
 			var plainJson interface{}
 			json.Unmarshal([]byte(responseBody), &plainJson)
 			m := plainJson.(map[string]interface{})
+			fmt.Println(m)
 			dataset, _ := json.Marshal(m["dcat:dataset"])
 
 			json.Unmarshal(dataset, &catalogResponse)
@@ -67,7 +68,7 @@ func init() {
 }
 
 func RunCurl(assetId string, offerId string) string {
-	curl := `  curl -L -X POST 'http://dataconsumer-1-controlplane.tx.test/management/v3/contractnegotiations'   -H 'Content-Type: application/json'   -H 'X-Api-Key: TEST2'   --data-raw '{
+	curl := `curl -L -X POST 'http://dataconsumer-1-controlplane.tx.test/management/v3/contractnegotiations'   -H 'Content-Type: application/json'   -H 'X-Api-Key: TEST1'   --data-raw '{
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
@@ -93,10 +94,14 @@ func RunCurl(assetId string, offerId string) string {
   },
   "callbackAddresses": []
 }' | jq`
+	fmt.Println(assetId)
+	fmt.Println(offerId)
 	curl = fmt.Sprintf(curl, assetId, offerId)
+	// fmt.Println(curl)
 	out, err := exec.Command("bash", "-c", curl).Output()
 	if err != nil {
-		panic("some error found")
+		fmt.Println(err)
+		// panic("some error found")
 	}
 	return string(out)
 }
