@@ -27,9 +27,9 @@ var createContractNegotiationCmd = &cobra.Command{
 				"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
 				},
 				"@type": "CatalogRequest",
-				"counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp",
-				"counterPartyId": "BPNL00000003AYRE",
-				"protocol": "dataspace-protocol-http",
+				"counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp/2025-1",
+				"counterPartyId": "did:web:ssi-dim-wallet-stub.tx.test:BPNL00000003AYRE",
+				"protocol": "dataspace-protocol-http:2025-1",
 				"querySpec": {
 				"filterExpression": {
 					"operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
@@ -73,14 +73,14 @@ func RunCurl(assetId string, offerId string) string {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
   "@type": "ContractRequest",
-  "counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp",
-  "protocol": "dataspace-protocol-http",
+  "counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp/2025-1,
+  "protocol": "dataspace-protocol-http:2025-1",
   "policy": {
     "@context": [
       "http://www.w3.org/ns/odrl.jsonld",
       "https://w3id.org/tractusx/edc/v0.0.1"
     ],
-    "assigner": "BPNL00000003AYRE",
+    "assigner": "did:web:ssi-dim-wallet-stub.tx.test:BPNL00000003AYRE",
     "target": "%s",
     "@id": "%s",
     "@type": "odrl:Offer",
