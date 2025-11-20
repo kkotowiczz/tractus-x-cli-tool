@@ -44,16 +44,16 @@ var createContractNegotiationCmd = &cobra.Command{
 			responseBody := utils.SendPostRequest([]byte(catalogRequest), url, "TEST1")
 
 			fmt.Println("createContractNegotiation called")
-			catalogResponse := utils.CatalogRequestResponse{}
+			catalogResponse := []utils.CatalogRequestResponse{}
 			var plainJson interface{}
 			json.Unmarshal([]byte(responseBody), &plainJson)
 			m := plainJson.(map[string]interface{})
 			fmt.Println(m)
-			dataset, _ := json.Marshal(m["dcat:dataset"])
-
+			dataset, _ := json.Marshal(m["dataset"])
 			json.Unmarshal(dataset, &catalogResponse)
 
-			out := RunCurl(catalogResponse.ID, catalogResponse.OdrlHasPolicy.ID)
+			element := catalogResponse[0]
+			out := RunCurl(element.ID, element.HasPolicy[0].ID)
 			fmt.Println(out)
 		} else {
 			panic("assetId is required")
@@ -73,7 +73,7 @@ func RunCurl(assetId string, offerId string) string {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
   "@type": "ContractRequest",
-  "counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp/2025-1,
+  "counterPartyAddress": "http://dataprovider-controlplane.tx.test/api/v1/dsp/2025-1",
   "protocol": "dataspace-protocol-http:2025-1",
   "policy": {
     "@context": [
@@ -97,7 +97,7 @@ func RunCurl(assetId string, offerId string) string {
 	fmt.Println(assetId)
 	fmt.Println(offerId)
 	curl = fmt.Sprintf(curl, assetId, offerId)
-	// fmt.Println(curl)
+	fmt.Println(curl)
 	out, err := exec.Command("bash", "-c", curl).Output()
 	if err != nil {
 		fmt.Println(err)
